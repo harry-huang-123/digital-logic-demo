@@ -1,80 +1,149 @@
 <!doctype html>
 <html lang="zh-Hant">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>數位邏輯互動實驗室</title>
-  
-<!-- Open Graph -->
-<meta property="og:type" content="website">
-<meta property="og:title" content="數位邏輯互動實驗室">
-<meta property="og:description"
-      content="互動式 AND 邏輯閘教學，可操作 A、B 開關，觀察 LED 與真值表。">
-<meta property="og:url"
-      content="https://harry-huang-123.github.io/digital-logic-demo/">
-<meta property="og:site_name" content="Digital Logic Lab">
-
-<!-- 一般網頁描述 -->
-<meta name="description"
-      content="數位邏輯互動模擬器，提供 AND 邏輯閘電路與真值表。">
-
-@media (min-width: 700px) and (max-height: 650px) {
-  .wrap {
-    padding: 12px 18px;
-  }
-
-  h1 {
-    font-size: 28px;
-    margin-bottom: 4px;
-  }
-
-  .sub {
-    margin-bottom: 10px;
-    font-size: 13px;
-  }
-
-  .grid {
-    gap: 12px;
-  }
-
-  .panel {
-    padding: 12px;
-  }
-
-  .switches {
-    margin: 8px 0;
-  }
-
-  button {
-    padding: 8px 12px;
-    font-size: 14px;
-    min-width: 90px;
-  }
-
-  .diagram {
-    max-height: 170px;
-    margin: 6px auto;
-  }
-
-  .result {
-    font-size: 22px;
-    margin: 8px 0;
-  }
-
-  th, td {
-    padding: 7px;
-  }
-
-  .hint {
-    font-size: 12px;
-    line-height: 1.4;
-    margin: 5px 0;
-  }
-}
-
-<style>
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,'Noto Sans TC',sans-serif;background:#0b1223;color:#eef4ff}.wrap{max-width:1100px;margin:auto;padding:32px 22px}h1{font-size:clamp(26px,4vw,42px);margin:0 0 8px}.sub{color:#9aacca;margin-bottom:28px}.grid{display:grid;grid-template-columns:1.5fr 1fr;gap:20px}.panel{background:#15213a;border:1px solid #2b3e61;border-radius:20px;padding:24px}.label{color:#aabbd6;font-size:14px}.switches{display:flex;gap:12px;flex-wrap:wrap;margin:20px 0}button{border:1px solid #4b6795;background:#263d63;color:white;border-radius:12px;padding:13px 20px;font-size:17px;cursor:pointer;min-width:110px}button:focus-visible{outline:3px solid #fff}button.on{background:#087f72;border-color:#36e5c6}.diagram{width:100%;height:auto;display:block;margin:20px auto}.wire{stroke:#667b9b;stroke-width:6;stroke-linecap:round;transition:stroke .25s}.wire.active{stroke:#40e6b3;filter:drop-shadow(0 0 5px #40e6b3)}.gate{fill:#243b60;stroke:#a9c3f1;stroke-width:4}.signal{font-size:24px;font-weight:700;fill:#fff}.lamp{width:20px;height:20px;display:inline-block;border-radius:50%;background:#4b5b73;vertical-align:middle;margin-right:8px}.lamp.on{background:#40e6b3;box-shadow:0 0 20px #40e6b3}.result{font-size:30px;font-weight:700;margin:18px 0}table{border-collapse:collapse;width:100%;margin-top:16px}th,td{padding:12px;text-align:center;border-bottom:1px solid #304363}tr.current{background:#27506b}code{color:#79e5ca;font-size:18px}.hint{line-height:1.7;color:#b8c9e4}@media(max-width:720px){.grid{grid-template-columns:1fr}.wrap{padding:20px 14px}.panel{padding:18px}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>數位邏輯互動實驗室｜AND Gate</title>
+  <meta name="description" content="互動式 AND 邏輯閘教學，可操作 A、B 開關，觀察 LED 與真值表。">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="數位邏輯互動實驗室">
+  <meta property="og:description" content="AND 邏輯閘互動模擬器：切換輸入，觀察即時輸出與真值表。">
+  <meta property="og:url" content="https://harry-huang-123.github.io/digital-logic-demo/">
+  <meta property="og:site_name" content="Digital Logic Lab">
+  <style>
+    :root { --bg: #0b1223; --panel: #15213a; --border: #304465; --muted: #b7c7e1; --green: #40e6b3; --scale: 1; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; }
+    body { font-family: system-ui, "Microsoft JhengHei", "Noto Sans TC", sans-serif; background: var(--bg); color: #eef4ff; }
+    .viewport { width: 100%; height: 100%; height: 100dvh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .stage { flex: none; position: relative; width: 1280px; height: 720px; padding: 26px 34px 30px; display: grid; grid-template-rows: 92px minmax(0, 1fr); gap: 14px; transform: scale(var(--scale)); transform-origin: center center; }
+    .eyebrow { font-size: 14px; letter-spacing: 2.2px; color: var(--green); font-weight: 750; margin-bottom: 6px; }
+    h1 { margin: 0 0 6px; font-size: 34px; font-weight: 790; letter-spacing: .4px; line-height: 1.2; }
+    .sub { font-size: 16px; line-height: 1.4; color: var(--muted); margin: 0; }
+    .grid { min-height: 0; display: grid; grid-template-columns: minmax(0, 1.54fr) minmax(0, .96fr); gap: 18px; }
+    .panel { min-width: 0; min-height: 0; background: var(--panel); border: 1px solid var(--border); border-radius: 18px; padding: 20px 23px; }
+    .panel-heading { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .panel-heading strong { font-size: 19px; }
+    .tag { display: inline-flex; align-items: center; border-radius: 100px; padding: 5px 11px; background: #174a45; color: #87f5d4; font-size: 12px; font-weight: 700; }
+    .left { display: flex; flex-direction: column; }
+    .switches { display: flex; flex-wrap: nowrap; gap: 12px; }
+    button { border: 1px solid #4f729e; background: #28436a; color: white; min-width: 0; font-family: inherit; font-size: 18px; font-weight: 700; border-radius: 10px; padding: 0 20px; height: 52px; cursor: pointer; white-space: nowrap; transition: background .2s, border-color .2s; }
+    button:hover { background: #365785; }
+    button:focus-visible { outline: 3px solid #e9fbff; outline-offset: 3px; }
+    button.on { background: #087f72; border-color: #40e6b3; }
+    #reset { background: #344b6c; }
+    .diagram { width: 100%; height: 293px; display: block; margin: 8px auto 4px; }
+    .wire { stroke: #7389a7; stroke-width: 7; stroke-linecap: round; fill: none; transition: stroke .24s; }
+    .wire.active { stroke: var(--green); filter: drop-shadow(0 0 5px var(--green)); }
+    .gate { fill: #243b60; stroke: #a9c3f1; stroke-width: 4; }
+    .signal { font-size: 25px; font-weight: 700; fill: #f3f8ff; }
+    .result { display: flex; align-items: center; gap: 12px; font-size: 29px; font-weight: 800; line-height: 1.25; margin: 2px 0 11px; }
+    .lamp { width: 22px; height: 22px; border-radius: 50%; background: #52657f; flex: none; }
+    .lamp.on { background: var(--green); box-shadow: 0 0 16px var(--green); }
+    .formula { font-size: 19px; margin: 0 0 5px; }
+    .formula code { color: #7df5cf; font-size: 21px; }
+    .hint { color: #c4d2eb; line-height: 1.4; font-size: 16px; margin: 0; }
+    .right { display: flex; flex-direction: column; }
+    .right .panel-heading { margin-bottom: 14px; }
+    table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+    th, td { text-align: center; height: 62px; font-size: 20px; border-bottom: 1px solid #334969; }
+    th { height: 50px; font-size: 17px; color: #cbdafa; }
+    tr.current td { background: #225f55; color: #a0ffe0; font-weight: 800; }
+    tr.current td:first-child { border-radius: 9px 0 0 9px; }
+    tr.current td:last-child { border-radius: 0 9px 9px 0; }
+    .footnote { margin-top: 20px; font-size: 17px; line-height: 1.55; color: #c2d5ee; }
+    @media (prefers-reduced-motion: reduce) { .wire, button { transition: none; } }
+  </style>
 </head>
-<body><main class="wrap"><h1>⚡ 數位邏輯互動實驗室</h1><p class="sub">AND 邏輯閘 · 點擊輸入開關，觀察電路與真值表即時變化</p><div class="grid"><section class="panel"><div class="label">互動電路</div><div class="switches"><button id="a" type="button" aria-pressed="false">輸入 A：0</button><button id="b" type="button" aria-pressed="false">輸入 B：0</button><button id="reset" type="button">重設</button></div><svg class="diagram" viewBox="0 0 600 270" role="img" aria-label="兩個輸入接入 AND 邏輯閘，右側為輸出"><path id="wa" class="wire" d="M45 80 H250"/><path id="wb" class="wire" d="M45 190 H250"/><path class="gate" d="M250 45 H330 A90 90 0 0 1 330 225 H250 Z"/><path id="wy" class="wire" d="M420 135 H535"/><text id="ta" class="signal" x="55" y="67">A=0</text><text id="tb" class="signal" x="55" y="179">B=0</text><text class="signal" x="277" y="144">AND</text><text id="ty" class="signal" x="485" y="118">Y=0</text><circle id="led" cx="550" cy="135" r="17" fill="#4b5b73"/></svg><div class="result"><span id="lamp" class="lamp"></span>輸出 Y = <span id="out">0</span></div><p>布林代數：<code>Y = A · B</code></p><p class="hint" id="explain" aria-live="polite">AND 閘只有在 A、B 都是 1 時，輸出才是 1。</p></section><section class="panel"><div class="label">AND 真值表</div><table><thead><tr><th>A</th><th>B</th><th>Y</th></tr></thead><tbody><tr id="r00"><td>0</td><td>0</td><td>0</td></tr><tr id="r01"><td>0</td><td>1</td><td>0</td></tr><tr id="r10"><td>1</td><td>0</td><td>0</td></tr><tr id="r11"><td>1</td><td>1</td><td>1</td></tr></tbody></table><p class="hint">目前輸入組合會在真值表中反白。亮綠色導線代表邏輯 1。</p></section></div></main><script>
-(()=>{let a=0,b=0;const $=id=>document.getElementById(id);function render(){const y=a&b;for(const [id,v] of [['a',a],['b',b]]){$(id).textContent=`輸入 ${id.toUpperCase()}：${v}`;$(id).classList.toggle('on',!!v);$(id).setAttribute('aria-pressed',String(!!v))}for(const [id,v] of [['wa',a],['wb',b],['wy',y],['lamp',y]])$(id).classList.toggle('on',!!v),$(id).classList.toggle('active',!!v);$('ta').textContent='A='+a;$('tb').textContent='B='+b;$('ty').textContent='Y='+y;$('out').textContent=y;$('led').setAttribute('fill',y?'#40e6b3':'#4b5b73');$('led').style.filter=y?'drop-shadow(0 0 12px #40e6b3)':'';for(const row of document.querySelectorAll('tbody tr'))row.classList.toggle('current',row.id===`r${a}${b}`);$('explain').textContent=y?'A 與 B 都是 1，因此 AND 閘輸出 1，LED 亮起。':'至少有一個輸入是 0，因此 AND 閘輸出 0，LED 熄滅。'}$('a').addEventListener('click',()=>{a^=1;render()});$('b').addEventListener('click',()=>{b^=1;render()});$('reset').addEventListener('click',()=>{a=0;b=0;render()});render()})();
-</script></body></html>
+<body>
+  <div class="viewport">
+    <main class="stage" aria-label="16:9 數位邏輯互動實驗室">
+      <header>
+        <div class="eyebrow">DIGITAL LOGIC / INTERACTIVE LAB</div>
+        <h1>⚡ 數位邏輯互動實驗室</h1>
+        <p class="sub">AND 邏輯閘 · 點擊輸入開關，觀察電路與真值表即時變化</p>
+      </header>
+      <div class="grid">
+        <section class="panel left" aria-labelledby="circuitTitle">
+          <div class="panel-heading"><strong id="circuitTitle">互動電路</strong><span class="tag">AND GATE</span></div>
+          <div class="switches">
+            <button id="a" type="button" aria-pressed="false">輸入 A：0</button>
+            <button id="b" type="button" aria-pressed="false">輸入 B：0</button>
+            <button id="reset" type="button">重設</button>
+          </div>
+          <svg class="diagram" viewBox="0 0 600 270" role="img" aria-label="兩個輸入接入 AND 邏輯閘，右側為輸出 LED">
+            <path id="wa" class="wire" d="M45 80 H250"/>
+            <path id="wb" class="wire" d="M45 190 H250"/>
+            <path class="gate" d="M250 45 H330 A90 90 0 0 1 330 225 H250 Z"/>
+            <path id="wy" class="wire" d="M420 135 H535"/>
+            <text id="ta" class="signal" x="55" y="65">A=0</text>
+            <text id="tb" class="signal" x="55" y="177">B=0</text>
+            <text class="signal" x="318" y="144" text-anchor="middle" font-size="27" font-weight="700" fill="#ffffff">AND</text>
+            <text id="ty" class="signal" x="475" y="116">Y=0</text>
+            <circle id="led" cx="550" cy="135" r="17" fill="#52657f"/>
+          </svg>
+          <div class="result"><span id="lamp" class="lamp"></span>輸出 Y = <span id="out">0</span></div>
+          <p class="formula">布林代數：<code>Y = A · B</code></p>
+          <p class="hint" id="explain" aria-live="polite">至少有一個輸入是 0，因此 AND 閘輸出 0，LED 熄滅。</p>
+        </section>
+        <section class="panel right" aria-labelledby="truthTitle">
+          <div class="panel-heading"><strong id="truthTitle">AND 真值表</strong><span class="tag">TRUTH TABLE</span></div>
+          <table>
+            <thead><tr><th>A</th><th>B</th><th>Y</th></tr></thead>
+            <tbody>
+              <tr id="r00"><td>0</td><td>0</td><td>0</td></tr>
+              <tr id="r01"><td>0</td><td>1</td><td>0</td></tr>
+              <tr id="r10"><td>1</td><td>0</td><td>0</td></tr>
+              <tr id="r11"><td>1</td><td>1</td><td>1</td></tr>
+            </tbody>
+          </table>
+          <p class="footnote">目前輸入組合會在真值表中反白。<br>亮綠色導線代表邏輯 1，灰藍色代表邏輯 0。</p>
+        </section>
+      </div>
+    </main>
+  </div>
+  <script>
+  (() => {
+    let a = 0, b = 0;
+    const $ = id => document.getElementById(id);
+    const stage = document.querySelector('.stage');
+    function fit() {
+      const w = document.documentElement.clientWidth || innerWidth;
+      const h = document.documentElement.clientHeight || innerHeight;
+      const scale = Math.max(0.01, Math.min(w / 1280, h / 720) * 0.985);
+      stage.style.setProperty('--scale', String(scale));
+    }
+    function render() {
+      const y = a & b;
+      for (const [id, value] of [['a', a], ['b', b]]) {
+        $(id).textContent = `輸入 ${id.toUpperCase()}：${value}`;
+        $(id).classList.toggle('on', Boolean(value));
+        $(id).setAttribute('aria-pressed', String(Boolean(value)));
+      }
+      for (const [id, value] of [['wa', a], ['wb', b], ['wy', y]]) {
+        $(id).classList.toggle('active', Boolean(value));
+      }
+      $('lamp').classList.toggle('on', Boolean(y));
+      $('ta').textContent = `A=${a}`;
+      $('tb').textContent = `B=${b}`;
+      $('ty').textContent = `Y=${y}`;
+      $('out').textContent = String(y);
+      $('led').setAttribute('fill', y ? '#40e6b3' : '#52657f');
+      $('led').style.filter = y ? 'drop-shadow(0 0 12px #40e6b3)' : '';
+      for (const row of document.querySelectorAll('tbody tr')) {
+        row.classList.toggle('current', row.id === `r${a}${b}`);
+      }
+      $('explain').textContent = y
+        ? 'A 與 B 都是 1，因此 AND 閘輸出 1，LED 亮起。'
+        : '至少有一個輸入是 0，因此 AND 閘輸出 0，LED 熄滅。';
+    }
+    $('a').addEventListener('click', () => { a ^= 1; render(); });
+    $('b').addEventListener('click', () => { b ^= 1; render(); });
+    $('reset').addEventListener('click', () => { a = 0; b = 0; render(); });
+    window.addEventListener('resize', fit);
+    fit();
+    render();
+  })();
+  </script>
+</body>
+</html>
